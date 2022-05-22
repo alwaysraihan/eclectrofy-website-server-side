@@ -22,6 +22,7 @@ const run = async () => {
         await client.connect();
         console.log("Database Connected");
         const toolsCoolection = client.db("Menufacturer").collection("Tools");
+        const orderCollection = client.db("Menufacturer").collection("Orders");
         app.get("/tools", async (req, res) => {
             const qurey = {};
             const cursor = toolsCoolection.find(qurey);
@@ -39,6 +40,21 @@ const run = async () => {
             } catch (error) {
                 return res.send({ message: "Data not found" });
             }
+        });
+        app.get("/order", async (req, res) => {
+            const email = req.query.email;
+            try {
+                const qurey = { buyerEmail: email };
+                const orders = await orderCollection.find(qurey).toArray();
+                res.send(orders);
+            } catch (error) {
+                return res.send({ message: "Data not found" });
+            }
+        });
+        app.post("/order", async (req, res) => {
+            const order = req.body;
+            const result = await orderCollection.insertOne(order);
+            res.send({ success: true, result });
         });
     } finally {
     }
