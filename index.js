@@ -123,7 +123,7 @@ const run = async () => {
             const token = jwt.sign(
                 { email: email },
                 process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: "1h" }
+                { expiresIn: "1d" }
             );
             res.send({ result, token });
         });
@@ -149,6 +149,13 @@ const run = async () => {
             const product = req.body;
             const result = await toolsCoolection.insertOne(product);
             res.send(result);
+        });
+        app.get("/all-orders", async (req, res) => {
+            const qurey = {};
+            const cursor = orderCollection.find(qurey);
+            const alOrders = await cursor.toArray();
+
+            res.send(alOrders);
         });
         app.get("/order", verifyToken, async (req, res) => {
             const email = req.query.email;
@@ -199,6 +206,16 @@ const run = async () => {
                 res.send(result);
             } catch (error) {
                 return res.send({ message: "Data not found" });
+            }
+        });
+        app.delete("/order/:id", verifyToken, async (req, res) => {
+            const id = req.params.id;
+            try {
+                const filter = { _id: ObjectId(id) };
+                const result = await orderCollection.deleteOne(filter);
+                res.send(result);
+            } catch (error) {
+                res.status(204).send({ error: "something went worng" });
             }
         });
     } finally {
