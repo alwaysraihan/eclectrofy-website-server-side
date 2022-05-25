@@ -40,6 +40,7 @@ const run = async () => {
         const toolsCoolection = client.db("Menufacturer").collection("Tools");
         const orderCollection = client.db("Menufacturer").collection("Orders");
         const UserCollections = client.db("Menufacturer").collection("Users");
+        const ReivewsCollection = client.db("Reivews").collection("Rivew");
         const PaymentCollections = client
             .db("Menufacturer")
             .collection("payment");
@@ -126,6 +127,13 @@ const run = async () => {
                 { expiresIn: "1d" }
             );
             res.send({ result, token });
+        });
+        app.get("/rivews", async (req, res) => {
+            const qurey = {};
+            const cursor = ReivewsCollection.find(qurey);
+            const rivew = await cursor.toArray();
+
+            res.send(rivew);
         });
         app.get("/tools", async (req, res) => {
             const qurey = {};
