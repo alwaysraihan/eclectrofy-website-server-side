@@ -65,6 +65,7 @@ const run = async () => {
         // get  admin
         app.get("/admin/:email", async (req, res) => {
             const email = req.params.email;
+
             const user = await UserCollections.findOne({ email: email });
             const isAdmin = user.role === "admin";
             res.send({ admin: isAdmin });
@@ -108,6 +109,17 @@ const run = async () => {
             });
             res.status(200).send({ clientSecret: paymentIntent.client_secret });
         });
+        app.get("/my-profile", verifyToken, async (req, res) => {
+            const email = req.query.email;
+
+            try {
+                const qurey = { email: email };
+                const orders = await UserCollections.find(qurey).toArray();
+                res.send(orders);
+            } catch (error) {
+                return res.send({ message: "Data not found" });
+            }
+        });
         app.put("/user/:email", async (req, res) => {
             const email = req.params.email;
             const user = req.body;
@@ -127,6 +139,29 @@ const run = async () => {
                 { expiresIn: "1d" }
             );
             res.send({ result, token });
+        });
+        app.put("/user/:email", verifyToken, async (req, res) => {
+            const email = req.params.email;
+            const ProfileData = req.body;
+            try {
+                const filter = { email: email };
+
+                const options = { upsert: true };
+                const updateDoc = {
+                    $set: {
+                        ProfileData,
+                    },
+                };
+                const result = await UserCollections.updateOne(
+                    filter,
+                    updateDoc,
+                    options
+                );
+
+                res.send({ success: true, result });
+            } catch (error) {
+                return res.send({ message: "Data not found" });
+            }
         });
         app.get("/rivews", async (req, res) => {
             const qurey = {};
@@ -150,13 +185,7 @@ const run = async () => {
         app.get("/tools/:id", verifyToken, async (req, res) => {
             const id = req.params.id;
 
-            try {
-                const qurey = { _id: ObjectId(id) };
-                const tools = await toolsCoolection.findOne(qurey);
-                res.send(tools);
-            } catch (error) {
-                return res.send({ message: "Data not found" });
-            }
+            image.png;
         });
         app.post("/tools", verifyToken, verifyAdmin, async (req, res) => {
             const product = req.body;
