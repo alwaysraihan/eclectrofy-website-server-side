@@ -110,7 +110,7 @@ const run = async () => {
             res.status(200).send({ clientSecret: paymentIntent.client_secret });
         });
         app.get("/my-profile", verifyToken, async (req, res) => {
-            const email = req.query.email;
+            const email = req.params.email;
 
             try {
                 const qurey = { email: email };
