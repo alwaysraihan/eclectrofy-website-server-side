@@ -158,6 +158,16 @@ const run = async () => {
             const result = await toolsCoolection.insertOne(product);
             res.send(result);
         });
+        app.delete("/tools/:id", verifyToken, verifyAdmin, async (req, res) => {
+            const id = req.params.id;
+            try {
+                const filter = { _id: ObjectId(id) };
+                const result = await toolsCoolection.deleteOne(filter);
+                res.send(result);
+            } catch (error) {
+                res.status(204).send({ error: "something went worng" });
+            }
+        });
         app.get("/all-orders", async (req, res) => {
             const qurey = {};
             const cursor = orderCollection.find(qurey);
