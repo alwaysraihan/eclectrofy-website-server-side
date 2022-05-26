@@ -110,7 +110,7 @@ const run = async () => {
             res.status(200).send({ clientSecret: paymentIntent.client_secret });
         });
         app.get("/my-profile", verifyToken, async (req, res) => {
-            const email = req.params.email;
+            const email = req.query.email;
 
             try {
                 const qurey = { email: email };
@@ -252,9 +252,7 @@ const run = async () => {
                     filter,
                     updateDoc
                 );
-                const updatePayment = await PaymentCollections.insertOne(
-                    payment
-                );
+
                 res.send(result);
             } catch (error) {
                 return res.send({ message: "Data not found" });
