@@ -275,7 +275,7 @@ const run = async () => {
 };
 run().catch(console.dir);
 app.get("/", (reqest, res) => {
-    res.status(200).send("Hello I'm set and  listening form Electrofy");
+    res.status(200).send("I'm listening form Electrofy");
 });
 
 app.listen(port, () => {
