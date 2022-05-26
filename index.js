@@ -135,6 +135,11 @@ const run = async () => {
 
             res.send(rivew);
         });
+        app.post("/rivews", async (req, res) => {
+            const rivew = req.body;
+            const result = await ReivewsCollection.insertOne(rivew);
+            res.send({ success: true, result });
+        });
         app.get("/tools", async (req, res) => {
             const qurey = {};
             const cursor = toolsCoolection.find(qurey);
