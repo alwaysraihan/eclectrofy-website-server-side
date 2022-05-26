@@ -252,7 +252,9 @@ const run = async () => {
                     filter,
                     updateDoc
                 );
-
+                const updatePayment = await PaymentCollections.insertOne(
+                    payment
+                );
                 res.send(result);
             } catch (error) {
                 return res.send({ message: "Data not found" });
@@ -273,7 +275,7 @@ const run = async () => {
 };
 run().catch(console.dir);
 app.get("/", (reqest, res) => {
-    res.status(200).send("Hello I'm listening form doctor portal");
+    res.status(200).send("Hello I'm set and  listening form Electrofy");
 });
 
 app.listen(port, () => {
